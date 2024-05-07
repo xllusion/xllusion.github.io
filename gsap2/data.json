@@ -1,0 +1,22 @@
+{
+  "id": 1,
+  "scene1": {
+    "imgBackground": "images/background.jpg",
+    "imgLogoBlack": "images/logo-black.png",
+    "imgLargeRedDiag": "images/large-red-diag.png",
+    "imgSmallWhiteDiag": "images/small-white-diag.png",
+    "imgProduct": "images/product-placeholder.png",
+    "textTitle": "IMPACT DRILLS"
+  },
+  "scene2": {
+    "imgTextMax": "images/text-max.png",
+    "imgTextYour": "images/text-your.png",
+    "imgTextPower": "images/text-power.png"
+  },
+  "scene3": {
+    "imgBackground3": "images/background3.jpg",
+    "imgLogo": "images/logo.png",
+    "imgCtaBg": "images/cta-bg.png",
+    "textCta": "CLICK HERE"
+  }
+}

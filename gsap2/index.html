@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Banner</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Banner -->
+    <div id="banner" class="container">
+        <!-- Scene 1 -->
+        <img id="background" scaling="stretch" class="background-image" />
+        <img id="logo-black" scaling="stretch" class="logo-black-image" />
+        <img id="large-red-diag" scaling="stretch" class="large-red-diag-image" />
+        <img id="small-white-diag" scaling="stretch" class="small-white-diag-image" />
+        <img id="product" scaling="stretch" class="product-image" />
+        <p id="title-text" class="title-text"></p>
+
+        <!-- Scene 2 -->
+        <div id="background2" class="background2-image"></div>
+        <img id="text-max" scaling="stretch" class="text-image" />
+        <img id="text-your" scaling="stretch" class="text-image" />
+        <img id="text-power" scaling="stretch" class="text-image" />
+
+        <!-- Scene 3 -->
+        <img id="background3" scaling="stretch" class="background-image" />
+        <img id="logo" scaling="stretch" class="logo-image" />
+        <div id="cta" class="cta-container">
+            <img id="cta-bg" scaling="stretch" class="cta-bg-image" />
+            <p id="cta-text" class="cta-text">CTA</p>
+        </div>
+
+        <!-- CTA Button -->
+        <button class="cta-button" type="button" />
+    </div>
+
+    <!-- Loading -->
+    <div id="loading">
+        <h2>Loading...</h2>
+    </div>
+
+    <!-- Content -->
+    <div id="content">
+        <h2>JSON Data Example</h2>
+        <div id="jsonData"></div>
+    </div>
+
+    <script>
+        // Initial elements
+        document.getElementById('loading').style.display = 'block';
+        document.getElementById('banner').style.display = 'none';
+        document.getElementById('content').style.display = 'none';
+
+        // Fetch data
+        fetchData('data.json');
+
+        // Load JSON data
+        async function fetchData(url) {
+            // Wait for 1 sec
+            await delay(1000);
+
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => {
+                    let jsonDataDiv = document.getElementById('jsonData');
+                    jsonDataDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    showContent(data);
+                })
+                .catch((error) => {
+                    console.error('Error loading:', error);
+                });
+        }
+
+        function delay(millis) {
+            return new Promise((resolve, reject) => {
+                setTimeout((_) => resolve(), millis);
+            });
+        }
+
+        // Show content once data is loaded
+        function showContent(data) {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('banner').style.display = 'flex';
+            document.getElementById('content').style.display = 'block';
+
+            // Setup Scene 1
+            document.getElementById("background").src = data.scene1.imgBackground;
+            document.getElementById("logo-black").src = data.scene1.imgLogoBlack;
+            document.getElementById("large-red-diag").src = data.scene1.imgLargeRedDiag;
+            document.getElementById("small-white-diag").src = data.scene1.imgSmallWhiteDiag;
+            document.getElementById("product").src = data.scene1.imgProduct;
+            document.getElementById("title-text").innerHTML = data.scene1.textTitle;
+  
+            // Setup Scene 2
+            document.getElementById("text-max").src = data.scene2.imgTextMax;
+            document.getElementById("text-your").src = data.scene2.imgTextYour;
+            document.getElementById("text-power").src = data.scene2.imgTextPower;
+
+            // Setup Scene 3
+            document.getElementById("background3").src = data.scene3.imgBackground3;
+            document.getElementById("logo").src = data.scene3.imgLogo;
+            document.getElementById("cta-bg").src = data.scene3.imgCtaBg;
+            document.getElementById("cta-text").innerHTML = data.scene3.textCta;
+
+            // Setup CTA Button
+            const ctaBtn = document.querySelector('.cta-button');
+            ctaBtn.addEventListener('click', () => {
+                window.open('https://www.google.com', '_blank');
+            });
+
+            // Initial Gsap animation
+            let mainTimeline = gsap
+                .timeline({ repeat: 2, repeatDelay: 2 })
+                .add(scene1())
+                .add(scene2(), '+=1')
+                .add(scene3(), '-=1');
+        }
+
+        // Timeline animation
+        function scene1() {
+            let tl = gsap.timeline();
+            tl.from('#logo-black', { duration: 1, delay: 0.5, opacity: 0, scale: 0.5, ease: 'back.out' })
+                .from('#large-red-diag', { duration: 0.6, yPercent: 100, ease: 'expo.out' }, '-=0.3')
+                .from('#small-white-diag', { duration: 0.6, yPercent: 100, ease: 'expo.out' }, '-=0.3')
+                .from('#product', { duration: 0.8, opacity: 0, x: 25, ease: 'expo.out' }, '>')
+                .from('#title-text', { duration: 0.8, opacity: 0, y: 10, ease: 'expo.out' }, '-=0.4');
+            return tl;
+        };
+
+        function scene2() {
+            let tl = gsap.timeline();
+            tl.from('#background2', { duration: 0.6, xPercent: -100, ease: 'expo.out' })
+                .from('#text-max', { duration: 0.6, opacity: 0, scale: 1.5, ease: 'power1.out' })
+                .set('#text-max', { opacity: 0 }, '+=0.4')
+                .from('#text-your', { duration: 0.6, opacity: 0, scale: 1.5, ease: 'power1.out' })
+                .set('#text-your', { opacity: 0 }, '+=0.4')
+                .from('#text-power', { duration: 0.6, opacity: 0, scale: 1.5, ease: 'power1.out' })
+                .set('#text-power', { opacity: 0 }, '+=2')
+                .set('#background2', { opacity: 0 }, '<');
+            return tl;
+        };
+
+        function scene3() {
+            let tl = gsap.timeline();
+            tl.from('#background3', { duration: 0.6, opacity: 0, scale: 1.2, ease: 'expo.out' })
+                .from('#logo', { duration: 1, opacity: 0, scale: 0.5, ease: 'back.out' })
+                .from('#cta', { duration: 1, opacity: 0, y: -20, ease: 'expo.out' });
+            return tl;
+        };
+    </script>
+
+</body>
+
+</html>
